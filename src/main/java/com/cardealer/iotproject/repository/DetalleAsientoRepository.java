@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+
 @Repository
 public interface DetalleAsientoRepository extends JpaRepository<DetalleAsiento, Integer> {
     List<DetalleAsiento> findByAsiento_AsientoId(Integer asientoId);

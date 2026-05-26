@@ -83,6 +83,7 @@ public class Commission {
     
     public BigDecimal getCommissionPercentage() { return commissionPercentage; }
     public void setCommissionPercentage(BigDecimal commissionPercentage) { this.commissionPercentage = commissionPercentage; }
+  
     
     public BigDecimal getCommissionAmount() { return commissionAmount; }
     public void setCommissionAmount(BigDecimal commissionAmount) { this.commissionAmount = commissionAmount; }

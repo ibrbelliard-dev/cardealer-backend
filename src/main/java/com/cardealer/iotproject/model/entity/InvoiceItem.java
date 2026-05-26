@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class InvoiceItem {
     
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

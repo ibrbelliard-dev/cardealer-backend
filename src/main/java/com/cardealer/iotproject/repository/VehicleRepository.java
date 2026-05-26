@@ -115,6 +115,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Query("SELECT COALESCE(SUM(v.purchasePrice), 0) FROM Vehicle v WHERE v.status = 'AVAILABLE' AND v.isActive = true")
     BigDecimal getTotalInventoryValue();
     
+    
     /**
      * Get vehicles that need service (based on mileage)
      */

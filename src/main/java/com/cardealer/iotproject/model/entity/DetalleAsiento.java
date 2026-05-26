@@ -41,6 +41,7 @@ public class DetalleAsiento {
     public String getCuentaNombre() { return cuentaNombre; }
     public void setCuentaNombre(String cuentaNombre) { this.cuentaNombre = cuentaNombre; }
 
+    
     public Double getDebe() { return debe; }
     public void setDebe(Double debe) { this.debe = debe; }
 

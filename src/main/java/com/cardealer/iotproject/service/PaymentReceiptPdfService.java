@@ -569,6 +569,7 @@ public class PaymentReceiptPdfService {
         }
     }
     
+    
     private String getInvoiceStatusSpanish(String status) {
         if (status == null) return "N/A";
         

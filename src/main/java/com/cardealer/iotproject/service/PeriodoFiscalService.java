@@ -110,6 +110,7 @@ public class PeriodoFiscalService {
         System.out.println("✅ Período desactivado: " + periodoFiscal);
     }
 
+    
     private void cerrarPeriodoAbierto() {
         periodoFiscalRepository.findPeriodoAbierto().ifPresent(periodoAbierto -> {
             System.out.println("🔒 Cerrando período abierto: " + periodoAbierto.getNombre());

@@ -107,6 +107,7 @@ public class ParametroContableService {
         descripciones.put("tssSfsTasaEmpleador", "SFS - Tasa empleador (%)");
         descripciones.put("tssInfotepTasa", "INFOTEP - Tasa (%)");
         
+        
         return descripciones.getOrDefault(clave, "Parámetro contable");
     }
 }

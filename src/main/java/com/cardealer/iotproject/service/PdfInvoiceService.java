@@ -77,6 +77,7 @@ public class PdfInvoiceService {
         PdfPCell leftCell = new PdfPCell();
         leftCell.setBorder(Rectangle.NO_BORDER);
         
+        
         // Load and add the logo
         Image logo = loadLogoFromCompany(company);
         if (logo != null) {

@@ -33,6 +33,7 @@ public class CommissionSummary {
     public BigDecimal getTotalCommission() { return totalCommission; }
     public void setTotalCommission(BigDecimal totalCommission) { this.totalCommission = totalCommission; }
     
+    
     public long getPendingCount() { return pendingCount; }
     public void setPendingCount(long pendingCount) { this.pendingCount = pendingCount; }
     

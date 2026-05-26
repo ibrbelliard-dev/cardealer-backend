@@ -278,6 +278,7 @@ public class DashboardService {
             .filter(Objects::nonNull)
             .reduce(BigDecimal.ZERO, BigDecimal::add);
         
+            
         long count = vehicles.stream().filter(v -> v.getPurchasePrice() != null).count();
         if (count == 0) return BigDecimal.ZERO;
         

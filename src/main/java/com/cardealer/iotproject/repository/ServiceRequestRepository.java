@@ -27,6 +27,7 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
     
     List<ServiceRequest> findByStatus(String status);
     
+    
     List<ServiceRequest> findByMechanic(String mechanic);
     
     @Query("SELECT s FROM ServiceRequest s LEFT JOIN FETCH s.vehicle WHERE s.serviceDate BETWEEN :startDate AND :endDate")

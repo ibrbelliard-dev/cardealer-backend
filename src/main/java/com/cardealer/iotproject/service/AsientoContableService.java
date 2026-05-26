@@ -87,6 +87,7 @@ public class AsientoContableService {
         return asientoRepository.save(asiento);
     }
 
+    
     @Transactional
     public void delete(Integer id) {
         AsientoContable asiento = findById(id);

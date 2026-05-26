@@ -210,6 +210,7 @@ public class Vehicle {
     public String getPlantCountry() { return plantCountry; }
     public void setPlantCountry(String plantCountry) { this.plantCountry = plantCountry; }
     
+    
     public String getSeries() { return series; }
     public void setSeries(String series) { this.series = series; }
     

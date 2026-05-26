@@ -83,6 +83,7 @@ public class AsientoContable {
     public Boolean getActivo() { return activo; }
     public void setActivo(Boolean activo) { this.activo = activo; }
 
+    
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 

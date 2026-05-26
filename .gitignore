@@ -35,3 +35,8 @@ out/
 
 ### VS Code ###
 .vscode/
+target/classes/com/cardealer/iotproject/controller/AsientoContableController.class
+*.class
+target/classes/com/cardealer/iotproject/controller/DashboardController.class
+target/classes/com/cardealer/iotproject/controller/ParametroContableController.class
+target/classes/com/cardealer/iotproject/service/DashboardContableService.class

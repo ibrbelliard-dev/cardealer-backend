@@ -197,6 +197,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("SELECT i FROM Invoice i WHERE i.vehicle.vin LIKE CONCAT('%', :vin, '%')")
     List<Invoice> findByVehicleVin(@Param("vin") String vin);
     
+    
     /**
      * Get cancelled invoices with reason
      */

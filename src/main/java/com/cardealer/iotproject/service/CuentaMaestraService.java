@@ -85,6 +85,7 @@ public class CuentaMaestraService {
         cuentaMaestraRepository.save(cuentaMaestra);
     }
 
+    
     @Transactional(readOnly = true)
     public List<CatalogoCompletoDTO> getCatalogoCompleto() {
         List<CatalogoCompletoDTO> catalogo = new ArrayList<>();

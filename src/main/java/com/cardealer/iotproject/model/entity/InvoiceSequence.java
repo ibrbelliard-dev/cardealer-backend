@@ -12,6 +12,7 @@ public class InvoiceSequence {
     @Column(name = "id")
     private Long id;
     
+    
     @Column(name = "ncf_type", nullable = false, length = 2)
     private String ncfType; // 31, 32, 33, 34, etc.
     

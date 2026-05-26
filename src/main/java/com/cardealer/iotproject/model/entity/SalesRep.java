@@ -158,6 +158,7 @@ public class SalesRep {
         return totalCommissionsPaid;
     }
 
+    
     public void setTotalCommissionsPaid(BigDecimal totalCommissionsPaid) {
         this.totalCommissionsPaid = totalCommissionsPaid;
     }

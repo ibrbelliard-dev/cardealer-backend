@@ -30,7 +30,7 @@ public class DashboardContableService {
         stats.put("cuentasActivas", cuentasActivas + subcuentasActivas);
         stats.put("totalCuentasMaestras", totalCuentas);
         stats.put("totalSubcuentas", totalSubcuentas);
-        
+
 
         // Datos de ejemplo para el dashboard (mientras se implementan los cálculos reales)
         stats.put("totalActivos", 8750000.0);
@@ -56,6 +56,7 @@ public class DashboardContableService {
         return stats;
     }
 
+    
     private Map<String, Object> crearDistribucion(String name, double value, String color) {
         Map<String, Object> item = new HashMap<>();
         item.put("name", name);

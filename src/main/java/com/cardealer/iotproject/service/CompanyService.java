@@ -21,6 +21,7 @@ public class CompanyService {
         return companyRepository.findAll();
     }
     
+    
     @Transactional(readOnly = true)
     public Company getCompanyById(Long id) {
         return companyRepository.findById(id)

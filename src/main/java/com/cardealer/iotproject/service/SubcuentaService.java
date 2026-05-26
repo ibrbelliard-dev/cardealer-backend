@@ -55,6 +55,7 @@ public class SubcuentaService {
         subcuenta.setActivo(true);
         return subcuentaRepository.save(subcuenta);
     }
+    
 
     @Transactional
     public Subcuenta update(Integer id, Subcuenta subcuentaDetails) {

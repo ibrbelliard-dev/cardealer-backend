@@ -323,6 +323,7 @@ public class ReporteContableService {
         return stats;
     }
 
+    
     private String getNombreMes(int mes) {
         String[] meses = {"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", 
                           "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
