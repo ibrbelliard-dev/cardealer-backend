@@ -1,5 +1,5 @@
 // src/main/java/com/cardealer/iotproject/accounting/controller/ReportesController.java
-package com.cardealer.iotproject.accounting.controller;
+package com.cardealer.iotproject.controller;
 
 import com.cardealer.iotproject.model.dto.ApiResponse;
 import com.cardealer.iotproject.service.ReporteContableService;
@@ -42,4 +42,5 @@ public class ReportesController {
         List<Map<String, Object>> movimientos = reporteContableService.getLibroMayor(cuentaCodigo, fechaInicio, fechaFin);
         return ResponseEntity.ok(ApiResponse.success("Libro mayor generado exitosamente", movimientos));
     }
+    
 }
