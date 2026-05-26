@@ -1,5 +1,5 @@
 // src/main/java/com/cardealer/iotproject/accounting/controller/AsientoContableController.java
-package com.cardealer.iotproject.accounting.controller;
+package com.cardealer.iotproject.controller;
 
 import com.cardealer.iotproject.model.dto.ApiResponse;
 import com.cardealer.iotproject.model.entity.AsientoContable;
