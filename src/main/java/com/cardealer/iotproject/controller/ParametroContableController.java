@@ -12,6 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/accounting/parametros")
 public class ParametroContableController {
+
     
 
     @Autowired
