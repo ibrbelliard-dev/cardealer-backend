@@ -11,25 +11,24 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
+// ReportesController.java
 @RestController
 @RequestMapping("/accounting/reports")
 public class ReportesController {
 
     @Autowired
-    private ReporteContableService reporteContableService;
+    private ReporteContableService reporteContableService;  // ← Servicio correcto
 
     @GetMapping("/balance-general")
-    public ResponseEntity<ApiResponse> getBalanceGeneral(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha) {
+    public ResponseEntity<ApiResponse> getBalanceGeneral(@RequestParam LocalDate fecha) {
         Map<String, Object> balance = reporteContableService.getBalanceGeneral(fecha);
         return ResponseEntity.ok(ApiResponse.success("Balance general generado exitosamente", balance));
     }
 
     @GetMapping("/estado-resultados")
     public ResponseEntity<ApiResponse> getEstadoResultados(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+            @RequestParam LocalDate fechaInicio,
+            @RequestParam LocalDate fechaFin) {
         Map<String, Object> resultados = reporteContableService.getEstadoResultados(fechaInicio, fechaFin);
         return ResponseEntity.ok(ApiResponse.success("Estado de resultados generado exitosamente", resultados));
     }
@@ -37,10 +36,9 @@ public class ReportesController {
     @GetMapping("/libro-mayor")
     public ResponseEntity<ApiResponse> getLibroMayor(
             @RequestParam String cuentaCodigo,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+            @RequestParam LocalDate fechaInicio,
+            @RequestParam LocalDate fechaFin) {
         List<Map<String, Object>> movimientos = reporteContableService.getLibroMayor(cuentaCodigo, fechaInicio, fechaFin);
         return ResponseEntity.ok(ApiResponse.success("Libro mayor generado exitosamente", movimientos));
     }
-    
 }

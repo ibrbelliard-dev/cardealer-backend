@@ -45,9 +45,6 @@ public interface CommissionRepository extends JpaRepository<Commission, Long> {
     @Query("SELECT COALESCE(SUM(c.commissionAmount), 0) FROM Commission c WHERE c.status = 'PENDING'")
     BigDecimal getTotalPendingAll();
     
-    @Query("SELECT COALESCE(SUM(c.commissionAmount), 0) FROM Commission c WHERE c.status = 'PAID'")
-    BigDecimal getTotalPaidAll();
-    
     @Query("SELECT COUNT(c) FROM Commission c WHERE c.status = 'PENDING'")
     Long countPendingAll();
     
@@ -61,4 +58,12 @@ public interface CommissionRepository extends JpaRepository<Commission, Long> {
     List<Commission> findByStatusAndPaymentDateBetween(@Param("status") String status,
                                                         @Param("start") LocalDateTime start,
                                                         @Param("end") LocalDateTime end);
+
+   List<Commission> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
+   
+@Query("SELECT COALESCE(SUM(c.commissionAmount), 0) FROM Commission c WHERE c.status = 'PAID'")
+BigDecimal getTotalPaidAll();
+
+
 }

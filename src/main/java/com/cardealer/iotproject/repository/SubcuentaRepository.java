@@ -25,4 +25,6 @@ public interface SubcuentaRepository extends JpaRepository<Subcuenta, Integer> {
     List<Subcuenta> findSubcuentasByCuentaMaestraCodigo(@Param("codigoMaestra") Integer codigoMaestra);
 
     boolean existsByCuentaMaestra_CodigoAndCodigo(Integer cuentaMaestraCodigo, Integer codigo);
+
+    long countByActivoTrue();
 }

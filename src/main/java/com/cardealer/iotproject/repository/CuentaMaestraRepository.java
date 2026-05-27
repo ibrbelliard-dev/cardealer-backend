@@ -25,4 +25,6 @@ public interface CuentaMaestraRepository extends JpaRepository<CuentaMaestra, In
     List<CuentaMaestra> findActivasByTipoCuenta(@Param("tipoCuenta") String tipoCuenta);
 
     boolean existsByCodigo(Integer codigo);
+
+    long countByActivoTrue();
 }

@@ -33,6 +33,22 @@ public class InvoiceService {
     
     @Autowired
     private InvoiceSequenceService sequenceService;
+
+
+
+@Autowired
+private AsientoContableService asientoContableService;
+
+@Autowired
+private DetalleAsientoRepository detalleAsientoRepository;
+
+@Autowired
+private ParametroContableRepository parametroContableRepository;
+
+@Autowired
+private CommissionRepository commissionRepository;
+
+
     
     private static final String NCF_TYPE_CREDIT = "31"; // Crédito Fiscal
     private static final String NCF_TYPE_CONSUMPTION = "32"; // Consumo

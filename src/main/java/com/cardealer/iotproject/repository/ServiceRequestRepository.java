@@ -50,6 +50,8 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
     @Query("SELECT s.status, COUNT(s) FROM ServiceRequest s GROUP BY s.status")
     List<Object[]> countByStatusGroup();
 
-
     
+List<ServiceRequest> findByCompletedDateBetween(LocalDateTime start, LocalDateTime end);
+
+
 }

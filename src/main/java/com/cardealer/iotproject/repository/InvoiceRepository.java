@@ -204,7 +204,20 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     @Query("SELECT i FROM Invoice i WHERE i.status = 'CANCELLED' AND i.cancelledAt >= :date")
     List<Invoice> findCancelledInvoicesSince(@Param("date") LocalDateTime date);
 
+
+    List<Invoice> findByStatusIn(List<String> statuses);
+
+@Query("SELECT i FROM Invoice i WHERE i.status IN :statuses AND i.invoiceDateTime BETWEEN :start AND :end")
+List<Invoice> findByStatusInAndInvoiceDateTimeBetween(@Param("statuses") List<String> statuses,
+                                                        @Param("start") LocalDateTime start,
+                                                        @Param("end") LocalDateTime end);
 // src/main/java/com/cardealer/iotproject/repository/InvoiceRepository.java
+
+
+
+
+@Query("SELECT COALESCE(SUM(i.total), 0) FROM Invoice i WHERE i.status IN :statuses")
+BigDecimal getTotalRevenueByStatus(@Param("statuses") List<String> statuses);
 
 
 

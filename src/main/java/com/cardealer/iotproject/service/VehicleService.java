@@ -50,6 +50,26 @@ public class VehicleService {
     
     @Autowired
     private ComplaintRepository complaintRepository;
+
+
+
+@Autowired
+private AsientoContableService asientoContableService;
+
+@Autowired
+private DetalleAsientoRepository detalleAsientoRepository;
+
+@Autowired
+private ParametroContableRepository parametroContableRepository;
+
+@Autowired
+private CommissionRepository commissionRepository;
+
+@Autowired
+private SalesRepRepository salesRepRepository;
+
+
+
     
     // ==================== GET VEHICLE METHODS ====================
     
@@ -116,6 +136,65 @@ public class VehicleService {
         }
         
         Vehicle saved = vehicleRepository.save(vehicle);
+
+
+
+
+                // En VehicleService.java, dentro de registerVehicle, después de Vehicle saved = vehicleRepository.save(vehicle);
+                // ========== REGISTRAR ASIENTO CONTABLE POR COMPRA DE VEHÍCULO ==========
+                try {
+                    // Obtener parámetros contables para las cuentas por defecto
+                    ParametroContable cuentaInventario = parametroContableRepository.findByClave("cuentaInventarioDefecto")
+                        .orElseThrow(() -> new RuntimeException("Cuenta de inventario no configurada"));
+                    ParametroContable cuentaProveedores = parametroContableRepository.findByClave("cuentaProveedorDefecto")
+                        .orElseThrow(() -> new RuntimeException("Cuenta de proveedores no configurada"));
+                    
+                    // Crear asiento contable
+                    AsientoContable asiento = new AsientoContable();
+                    asiento.setFecha(LocalDate.now());
+                    asiento.setDescripcion("Compra de vehículo: " + saved.getMake().getMakeName() + " " + saved.getModel().getModelName() + " (" + saved.getModelYear() + ")");
+                    asiento.setTipoAsiento("COMPRA");
+                    asiento.setEstado("APROBADO");
+                    
+                    // Calcular totales
+                    Double valorCompra = saved.getPurchasePrice().doubleValue();
+                    asiento.setTotalDebe(valorCompra);
+                    asiento.setTotalHaber(valorCompra);
+                    
+                    AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+                    
+                    // Crear detalles del asiento
+                    List<DetalleAsiento> detalles = new ArrayList<>();
+                    
+                    // Detalle 1: Debe a Inventario
+                    DetalleAsiento detalleDebe = new DetalleAsiento();
+                    detalleDebe.setAsiento(asientoGuardado);
+                    detalleDebe.setCuentaCodigo(cuentaInventario.getValor());
+                    detalleDebe.setCuentaNombre("Inventario de Vehículos");
+                    detalleDebe.setDebe(valorCompra);
+                    detalleDebe.setHaber(0.0);
+                    detalles.add(detalleDebe);
+                    
+                    // Detalle 2: Haber a Cuentas por Pagar - Proveedores
+                    DetalleAsiento detalleHaber = new DetalleAsiento();
+                    detalleHaber.setAsiento(asientoGuardado);
+                    detalleHaber.setCuentaCodigo(cuentaProveedores.getValor());
+                    detalleHaber.setCuentaNombre("Cuentas por Pagar - Proveedores");
+                    detalleHaber.setDebe(0.0);
+                    detalleHaber.setHaber(valorCompra);
+                    detalles.add(detalleHaber);
+                    
+                    detalleAsientoRepository.saveAll(detalles);
+                    
+                    log.info("Asiento contable creado para compra de vehículo ID: " + saved.getVehicleId());
+                } catch (Exception e) {
+                    log.warning("Error al crear asiento contable para compra: " + e.getMessage());
+                }
+
+
+
+
+
         log.info("Vehículo registrado exitosamente con ID: " + saved.getVehicleId());
         
         return saved;
@@ -306,34 +385,191 @@ public Vehicle updateVehicle(Long vehicleId, Vehicle vehicleDetails) {
 }
     
     // ==================== SELL VEHICLE ====================
+
+  @Transactional
+public Vehicle sellVehicle(Long vehicleId, SaleRequest saleRequest) {
+    Vehicle vehicle = getVehicleById(vehicleId);
     
-    @Transactional
-    public Vehicle sellVehicle(Long vehicleId, SaleRequest saleRequest) {
-        Vehicle vehicle = getVehicleById(vehicleId);
-        
-        if (vehicle.getStatus() == VehicleStatus.SOLD) {
-            throw new RuntimeException("El vehículo ya está vendido");
-        }
-        
-        vehicle.setSellingPrice(saleRequest.getSellingPrice());
-        vehicle.setStatus(VehicleStatus.SOLD);
-        vehicle.setLastModified(LocalDateTime.now());
-        
-        String saleNotes = String.format("Vendido a: %s", saleRequest.getCustomerName());
-        if (saleRequest.getCustomerPhone() != null && !saleRequest.getCustomerPhone().isEmpty()) {
-            saleNotes += String.format(" | Teléfono: %s", saleRequest.getCustomerPhone());
-        }
-        if (saleRequest.getCustomerEmail() != null && !saleRequest.getCustomerEmail().isEmpty()) {
-            saleNotes += String.format(" | Email: %s", saleRequest.getCustomerEmail());
-        }
-        if (saleRequest.getNotes() != null && !saleRequest.getNotes().isEmpty()) {
-            saleNotes += String.format(" | Notas: %s", saleRequest.getNotes());
-        }
-        
-        vehicle.setNotes(vehicle.getNotes() != null ? vehicle.getNotes() + "\n" + saleNotes : saleNotes);
-        
-        return vehicleRepository.save(vehicle);
+    if (vehicle.getStatus() == VehicleStatus.SOLD) {
+        throw new RuntimeException("El vehículo ya está vendido");
     }
+    
+    vehicle.setSellingPrice(saleRequest.getSellingPrice());
+    vehicle.setStatus(VehicleStatus.SOLD);
+    vehicle.setLastModified(LocalDateTime.now());
+    
+    String saleNotes = String.format("Vendido a: %s", saleRequest.getCustomerName());
+    if (saleRequest.getCustomerPhone() != null && !saleRequest.getCustomerPhone().isEmpty()) {
+        saleNotes += String.format(" | Teléfono: %s", saleRequest.getCustomerPhone());
+    }
+    if (saleRequest.getCustomerEmail() != null && !saleRequest.getCustomerEmail().isEmpty()) {
+        saleNotes += String.format(" | Email: %s", saleRequest.getCustomerEmail());
+    }
+    if (saleRequest.getSalespersonName() != null && !saleRequest.getSalespersonName().isEmpty()) {
+        saleNotes += String.format(" | Vendedor: %s", saleRequest.getSalespersonName());
+    }
+    if (saleRequest.getNotes() != null && !saleRequest.getNotes().isEmpty()) {
+        saleNotes += String.format(" | Notas: %s", saleRequest.getNotes());
+    }
+    
+    vehicle.setNotes(vehicle.getNotes() != null ? vehicle.getNotes() + "\n" + saleNotes : saleNotes);
+    
+    Vehicle saved = vehicleRepository.save(vehicle);
+    
+    // ========== REGISTRAR ASIENTO CONTABLE POR VENTA ==========
+    try {
+        // Obtener parámetros contables
+        ParametroContable cuentaVentas = parametroContableRepository.findByClave("cuentaVentaDefecto")
+            .orElseThrow(() -> new RuntimeException("Cuenta de ventas no configurada"));
+        ParametroContable cuentaCosto = parametroContableRepository.findByClave("cuentaCostoDefecto")
+            .orElseThrow(() -> new RuntimeException("Cuenta de costo no configurada"));
+        ParametroContable cuentaItbis = parametroContableRepository.findByClave("cuentaItbisPorPagarDefecto")
+            .orElseThrow(() -> new RuntimeException("Cuenta de ITBIS no configurada"));
+        ParametroContable cuentaCliente = parametroContableRepository.findByClave("cuentaClienteDefecto")
+            .orElseThrow(() -> new RuntimeException("Cuenta de clientes no configurada"));
+        
+        Double precioVenta = saved.getSellingPrice().doubleValue();
+        Double costoVehiculo = saved.getPurchasePrice() != null ? saved.getPurchasePrice().doubleValue() : 0.0;
+        Double itbis = precioVenta * 0.18;
+        Double totalFactura = precioVenta + itbis;
+        
+        // Crear asiento contable
+        AsientoContable asiento = new AsientoContable();
+        asiento.setFecha(LocalDate.now());
+        asiento.setDescripcion("Venta de vehículo: " + saved.getMake().getMakeName() + " " + saved.getModel().getModelName() + 
+                               " (" + saved.getModelYear() + ") - Cliente: " + saleRequest.getCustomerName());
+        asiento.setTipoAsiento("VENTA");
+        asiento.setEstado("APROBADO");
+        asiento.setTotalDebe(totalFactura);
+        asiento.setTotalHaber(totalFactura);
+        
+        AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+        
+        List<DetalleAsiento> detalles = new ArrayList<>();
+        
+        // Detalle 1: Debe a Clientes (Cuentas por Cobrar)
+        DetalleAsiento detalleCliente = new DetalleAsiento();
+        detalleCliente.setAsiento(asientoGuardado);
+        detalleCliente.setCuentaCodigo(cuentaCliente.getValor());
+        detalleCliente.setCuentaNombre("Cuentas por Cobrar - Clientes");
+        detalleCliente.setDebe(totalFactura);
+        detalleCliente.setHaber(0.0);
+        detalles.add(detalleCliente);
+        
+        // Detalle 2: Haber a Ventas
+        DetalleAsiento detalleVenta = new DetalleAsiento();
+        detalleVenta.setAsiento(asientoGuardado);
+        detalleVenta.setCuentaCodigo(cuentaVentas.getValor());
+        detalleVenta.setCuentaNombre("Ventas de Vehículos");
+        detalleVenta.setDebe(0.0);
+        detalleVenta.setHaber(precioVenta);
+        detalles.add(detalleVenta);
+        
+        // Detalle 3: Haber a ITBIS por Pagar
+        DetalleAsiento detalleItbis = new DetalleAsiento();
+        detalleItbis.setAsiento(asientoGuardado);
+        detalleItbis.setCuentaCodigo(cuentaItbis.getValor());
+        detalleItbis.setCuentaNombre("ITBIS por Pagar");
+        detalleItbis.setDebe(0.0);
+        detalleItbis.setHaber(itbis);
+        detalles.add(detalleItbis);
+        
+        detalleAsientoRepository.saveAll(detalles);
+        
+        // Registrar costo de venta (asiento separado)
+        if (costoVehiculo > 0) {
+            AsientoContable asientoCosto = new AsientoContable();
+            asientoCosto.setFecha(LocalDate.now());
+            asientoCosto.setDescripcion("Costo de venta - Vehículo ID: " + saved.getVehicleId());
+            asientoCosto.setTipoAsiento("COSTO");
+            asientoCosto.setEstado("APROBADO");
+            asientoCosto.setTotalDebe(costoVehiculo);
+            asientoCosto.setTotalHaber(costoVehiculo);
+            
+            AsientoContable asientoCostoGuardado = asientoContableService.create(asientoCosto, null);
+            
+            List<DetalleAsiento> detallesCosto = new ArrayList<>();
+            
+            // Debe a Costo de Ventas
+            DetalleAsiento detalleCostoDebe = new DetalleAsiento();
+            detalleCostoDebe.setAsiento(asientoCostoGuardado);
+            detalleCostoDebe.setCuentaCodigo(cuentaCosto.getValor());
+            detalleCostoDebe.setCuentaNombre("Costo de Vehículos Vendidos");
+            detalleCostoDebe.setDebe(costoVehiculo);
+            detalleCostoDebe.setHaber(0.0);
+            detallesCosto.add(detalleCostoDebe);
+            
+            // Haber a Inventario
+            ParametroContable cuentaInventario = parametroContableRepository.findByClave("cuentaInventarioDefecto")
+                .orElseThrow(() -> new RuntimeException("Cuenta de inventario no configurada"));
+            DetalleAsiento detalleInventario = new DetalleAsiento();
+            detalleInventario.setAsiento(asientoCostoGuardado);
+            detalleInventario.setCuentaCodigo(cuentaInventario.getValor());
+            detalleInventario.setCuentaNombre("Inventario de Vehículos");
+            detalleInventario.setDebe(0.0);
+            detalleInventario.setHaber(costoVehiculo);
+            detallesCosto.add(detalleInventario);
+            
+            detalleAsientoRepository.saveAll(detallesCosto);
+        }
+        
+        // Crear comisión para el vendedor
+        crearComision(saleRequest, saved);
+        
+        log.info("Asientos contables creados para venta de vehículo ID: " + saved.getVehicleId());
+    } catch (Exception e) {
+        log.warning("Error al crear asientos contables para venta: " + e.getMessage());
+    }
+    
+    return saved;
+}
+
+// Método auxiliar para crear comisión usando salespersonId
+private void crearComision(SaleRequest saleRequest, Vehicle vehicle) {
+    try {
+        // Validar que tengamos información del vendedor
+        if (saleRequest.getSalespersonId() == null || saleRequest.getSalespersonId().isEmpty()) {
+            log.info("No hay salespersonId, no se creará comisión");
+            return;
+        }
+        
+        // Convertir String a Long
+        Long salesRepId;
+        try {
+            salesRepId = Long.parseLong(saleRequest.getSalespersonId());
+        } catch (NumberFormatException e) {
+            log.warning("salespersonId no es un número válido: " + saleRequest.getSalespersonId());
+            return;
+        }
+        
+        // Buscar el vendedor
+        SalesRep salesRep = salesRepRepository.findById(salesRepId)
+            .orElseThrow(() -> new RuntimeException("Vendedor no encontrado con ID: " + salesRepId));
+        
+        // Calcular comisión
+        BigDecimal commissionAmount = vehicle.getSellingPrice()
+            .multiply(salesRep.getCommissionPercentage())
+            .divide(new BigDecimal("100"), 2, RoundingMode.HALF_UP);
+        
+        // Crear la comisión
+        Commission commission = new Commission();
+        commission.setSalesRepId(salesRepId);
+        commission.setVehicleId(vehicle.getVehicleId());
+        commission.setSalePrice(vehicle.getSellingPrice());
+        commission.setCommissionPercentage(salesRep.getCommissionPercentage());
+        commission.setCommissionAmount(commissionAmount);
+        commission.setStatus("PENDING");
+        
+        commissionRepository.save(commission);
+        
+        log.info("Comisión creada para vendedor ID: " + salesRepId + 
+                 " (" + salesRep.getFirstName() + " " + salesRep.getLastName() + 
+                 ") por monto: " + commissionAmount);
+        
+    } catch (Exception e) {
+        log.warning("Error al crear comisión: " + e.getMessage());
+    }
+}  
     
     // ==================== SEARCH VEHICLES ====================
     

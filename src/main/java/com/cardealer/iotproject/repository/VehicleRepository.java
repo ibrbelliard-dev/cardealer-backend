@@ -127,4 +127,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
      */
     @Query("SELECT v.make.makeName, COUNT(v) FROM Vehicle v GROUP BY v.make.makeName ORDER BY COUNT(v) DESC")
     List<Object[]> getVehicleCountByMake();
+
+
+    
 }

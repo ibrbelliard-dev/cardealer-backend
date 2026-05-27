@@ -1,6 +1,13 @@
 package com.cardealer.iotproject.service;
 
+import com.cardealer.iotproject.model.entity.AsientoContable;
+import com.cardealer.iotproject.model.entity.DetalleAsiento;
+import com.cardealer.iotproject.model.entity.ParametroContable;
 import com.cardealer.iotproject.model.entity.ServiceRequest;
+import com.cardealer.iotproject.repository.CommissionRepository;
+import com.cardealer.iotproject.repository.DetalleAsientoRepository;
+import com.cardealer.iotproject.repository.ParametroContableRepository;
+import com.cardealer.iotproject.repository.SalesRepRepository;
 import com.cardealer.iotproject.repository.ServiceRequestRepository;
 import com.cardealer.iotproject.repository.VehicleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +16,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -24,6 +34,26 @@ public class ServiceRequestService {
     
     @Autowired
     private VehicleRepository vehicleRepository;
+
+
+
+@Autowired
+private AsientoContableService asientoContableService;
+
+@Autowired
+private DetalleAsientoRepository detalleAsientoRepository;
+
+@Autowired
+private ParametroContableRepository parametroContableRepository;
+
+@Autowired
+private CommissionRepository commissionRepository;
+
+@Autowired
+private SalesRepRepository salesRepRepository;
+
+
+
     
     @Transactional(readOnly = true)
     public List<ServiceRequest> getAllServiceRequests() {
@@ -59,6 +89,64 @@ public class ServiceRequestService {
         serviceRequest.setServiceDate(LocalDateTime.now());
         
         ServiceRequest saved = serviceRequestRepository.save(serviceRequest);
+
+
+if (saved.getActualCost() != null && saved.getActualCost().compareTo(BigDecimal.ZERO) > 0) {
+    try {
+        // Obtener parámetros contables
+        ParametroContable cuentaGastosMantenimiento = parametroContableRepository.findByClave("cuentaGastosMantenimiento")
+            .orElseThrow(() -> new RuntimeException("Cuenta de gastos de mantenimiento no configurada"));
+        ParametroContable cuentaCaja = parametroContableRepository.findByClave("cuentaCajaDefecto")
+            .orElseThrow(() -> new RuntimeException("Cuenta de caja no configurada"));
+        
+        Double costo = saved.getActualCost().doubleValue();
+        
+        // Crear asiento contable
+        AsientoContable asiento = new AsientoContable();
+        asiento.setFecha(LocalDate.now());
+        asiento.setDescripcion("Mantenimiento de vehículo - " + saved.getServiceType() + 
+                               " (Vehículo ID: " + saved.getVehicle().getVehicleId() + ")");
+        asiento.setTipoAsiento("GASTO");
+        asiento.setEstado("APROBADO");
+        asiento.setTotalDebe(costo);
+        asiento.setTotalHaber(costo);
+        
+        AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+        
+        List<DetalleAsiento> detalles = new ArrayList<>();
+        
+        // Detalle 1: Debe a Gastos de Mantenimiento
+        DetalleAsiento detalleGasto = new DetalleAsiento();
+        detalleGasto.setAsiento(asientoGuardado);
+        detalleGasto.setCuentaCodigo(cuentaGastosMantenimiento.getValor());
+        detalleGasto.setCuentaNombre("Gastos de Mantenimiento");
+        detalleGasto.setDebe(costo);
+        detalleGasto.setHaber(0.0);
+        detalles.add(detalleGasto);
+        
+        // Detalle 2: Haber a Caja/Bancos
+        DetalleAsiento detalleCaja = new DetalleAsiento();
+        detalleCaja.setAsiento(asientoGuardado);
+        detalleCaja.setCuentaCodigo(cuentaCaja.getValor());
+        detalleCaja.setCuentaNombre("Caja y Bancos");
+        detalleCaja.setDebe(0.0);
+        detalleCaja.setHaber(costo);
+        detalles.add(detalleCaja);
+        
+        detalleAsientoRepository.saveAll(detalles);
+        
+        log.info("Asiento contable creado para mantenimiento ID: " + saved.getId());
+    } catch (Exception e) {
+        log.warning("Error al crear asiento contable para mantenimiento: " + e.getMessage());
+    }
+}
+
+
+
+
+
+
+
         log.info("Solicitud de servicio creada: ID " + saved.getId());
         return saved;
     }

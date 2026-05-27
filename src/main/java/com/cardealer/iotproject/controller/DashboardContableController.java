@@ -2,6 +2,7 @@
 package com.cardealer.iotproject.controller;
 
 import com.cardealer.iotproject.model.dto.ApiResponse;
+import com.cardealer.iotproject.service.DashboardContableService;
 import com.cardealer.iotproject.service.ReporteContableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,16 +12,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
+// DashboardContableController.java
 @RestController
 @RequestMapping("/accounting/dashboard")
 public class DashboardContableController {
 
     @Autowired
-    private ReporteContableService reporteContableService;
+    private DashboardContableService dashboardContableService;  // ← Servicio correcto
 
     @GetMapping("/stats")
     public ResponseEntity<ApiResponse> getDashboardStats() {
-        Map<String, Object> stats = reporteContableService.getDashboardStats();
+        Map<String, Object> stats = dashboardContableService.getDashboardStats();
         return ResponseEntity.ok(ApiResponse.success("Estadísticas del dashboard obtenidas exitosamente", stats));
     }
 }
