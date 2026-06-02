@@ -220,5 +220,7 @@ List<Invoice> findByStatusInAndInvoiceDateTimeBetween(@Param("statuses") List<St
 BigDecimal getTotalRevenueByStatus(@Param("statuses") List<String> statuses);
 
 
+ // Agregar este método
+    List<Invoice> findByInvoiceDateTimeBetween(LocalDateTime start, LocalDateTime end);
 
 }

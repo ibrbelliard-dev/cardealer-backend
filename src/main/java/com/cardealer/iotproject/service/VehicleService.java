@@ -161,7 +161,9 @@ private SalesRepRepository salesRepRepository;
                     asiento.setTotalDebe(valorCompra);
                     asiento.setTotalHaber(valorCompra);
                     
-                    AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+                  //  AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+                    AsientoContable asientoGuardado = asientoContableService.create(asiento);
+
                     
                     // Crear detalles del asiento
                     List<DetalleAsiento> detalles = new ArrayList<>();
@@ -443,7 +445,9 @@ public Vehicle sellVehicle(Long vehicleId, SaleRequest saleRequest) {
         asiento.setTotalDebe(totalFactura);
         asiento.setTotalHaber(totalFactura);
         
-        AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+      //  AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+        AsientoContable asientoGuardado = asientoContableService.create(asiento);
+
         
         List<DetalleAsiento> detalles = new ArrayList<>();
         
@@ -486,7 +490,9 @@ public Vehicle sellVehicle(Long vehicleId, SaleRequest saleRequest) {
             asientoCosto.setTotalDebe(costoVehiculo);
             asientoCosto.setTotalHaber(costoVehiculo);
             
-            AsientoContable asientoCostoGuardado = asientoContableService.create(asientoCosto, null);
+          //  AsientoContable asientoCostoGuardado = asientoContableService.create(asientoCosto, null);
+          AsientoContable asientoCostoGuardado = asientoContableService.create(asientoCosto);
+
             
             List<DetalleAsiento> detallesCosto = new ArrayList<>();
             

@@ -111,7 +111,9 @@ if (saved.getActualCost() != null && saved.getActualCost().compareTo(BigDecimal.
         asiento.setTotalDebe(costo);
         asiento.setTotalHaber(costo);
         
-        AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+     //   AsientoContable asientoGuardado = asientoContableService.create(asiento, null);
+        AsientoContable asientoGuardado = asientoContableService.create(asiento);
+
         
         List<DetalleAsiento> detalles = new ArrayList<>();
         

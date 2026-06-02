@@ -1,3 +1,4 @@
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\Rol.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\CuentaMaestraService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\PaymentController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\CommissionController.java
@@ -11,6 +12,7 @@ E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\con
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\ClientRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\ServiceRequestService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\VehicleController.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\PermisoRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\RecallController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\dto\ProductDTO.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\DashboardContableService.java
@@ -18,12 +20,14 @@ E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\mod
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\VehicleService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\config\ScheduledConfig.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\InvoiceItemRepository.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\RolController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\SalesRepRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\InvoiceService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\CompanyController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\PaymentRequest.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\InvoiceRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\config\JacksonConfig.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\Permiso.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\CompanyService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\PaymentRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\DocumentController.java
@@ -36,10 +40,12 @@ E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\rep
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\enums\CommType.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\ComplaintService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\VehicleRecallLink.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\DgiiArchivoRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\ReactRouterController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\AsientoContable.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\dto\LoginRequest.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\CommissionDashboardDTO.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\RolRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\ApiResponse.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\myUtils\MediaTypeResolver.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\CommissionSummaryDTO.java
@@ -92,6 +98,7 @@ E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\ser
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\ParametroContableService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\CompanyRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\BranchService.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\DashboardEjecutivoController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\WMI.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\Make.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\DetalleAsientoRepository.java
@@ -106,6 +113,8 @@ E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\rep
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\DashboardService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\SalesRepService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\CuentaMaestraRepository.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\DgiiArchivo.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\DashboardEjecutivoService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\Document.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\SubcuentaRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\UserRole.java
@@ -123,6 +132,7 @@ E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\mod
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\ParametroContableController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\ClientService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\VehicleRecallLinkRepository.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\UsuarioRolDTO.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\AppUserRepository.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\CarImageService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\ClientController.java
@@ -140,7 +150,9 @@ E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\ser
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\UserController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\CommissionSummary.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\config\AppConfig.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\DgiiArchivoDTO.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\MakeRepository.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\RolDTO.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\FileServeController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\VinDecodeCache.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\BranchDTO.java
@@ -153,12 +165,15 @@ E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\mod
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\SyncService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\AsientoContableService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\repository\VehicleImageRepository.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\controller\DgiiController.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\CuentaMaestra.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\dto\LocationDTO.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\dto\UserDTO.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\UserService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\PaymentService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\accounting\exception\ResourceNotFoundException.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\DgiiService.java
+E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\service\RolService.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\CommissionPaymentRequest.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\dto\ImageUploadResponse.java
 E:\TOOLS\iot_project\cardealerBackend\src\main\java\com\cardealer\iotproject\model\entity\Subcuenta.java

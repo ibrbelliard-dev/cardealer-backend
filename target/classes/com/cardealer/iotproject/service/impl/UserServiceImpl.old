@@ -1,0 +1,114 @@
+package com.cardealer.iotproject.service.impl;
+
+import com.cardealer.iotproject.dto.UserDTO;
+import com.cardealer.iotproject.entity.User;
+import com.cardealer.iotproject.repository.UserRepository;
+import com.cardealer.iotproject.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+@Service
+public class UserServiceImpl implements UserService {
+    
+    @Autowired
+    private UserRepository userRepository;
+    
+    private UserDTO convertToDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setLastname(user.getLastname());
+        dto.setEmail(user.getEmail());
+        dto.setCode(user.getCode());
+        dto.setSecretword(user.getSecretword());
+        dto.setLocid(user.getLocid());
+        dto.setCell(user.getCell());
+        dto.setType(user.getType());
+        dto.setStatus(user.getStatus());
+        dto.setCreateddate(user.getCreateddate());  // Add createddate to DTO
+        return dto;
+    }
+    
+    // This method should ONLY be used for CREATE operations
+    private User convertToEntityForCreate(UserDTO dto) {
+        User user = new User();
+        user.setName(dto.getName());
+        user.setLastname(dto.getLastname());
+        user.setEmail(dto.getEmail());
+        user.setCode(dto.getCode());
+        user.setSecretword(dto.getSecretword());
+        user.setLocid(dto.getLocid());
+        user.setCell(dto.getCell());
+        user.setType(dto.getType());
+        user.setStatus(dto.getStatus());
+        // createddate will be auto-set by @PrePersist
+        return user;
+    }
+    
+    @Override
+    @Transactional
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = convertToEntityForCreate(userDTO);
+        User savedUser = userRepository.save(user);
+        return convertToDTO(savedUser);
+    }
+    
+    @Override
+    @Transactional
+    public UserDTO updateUser(Integer id, UserDTO userDTO) {
+        Optional<User> existingUserOpt = userRepository.findById(id);
+        if (existingUserOpt.isPresent()) {
+            User existingUser = existingUserOpt.get();
+            
+            // Update ONLY the fields that should be changed
+            // IMPORTANT: Do NOT update createddate - preserve original creation time
+            existingUser.setName(userDTO.getName());
+            existingUser.setLastname(userDTO.getLastname());
+            existingUser.setEmail(userDTO.getEmail());
+            existingUser.setCode(userDTO.getCode());
+            existingUser.setSecretword(userDTO.getSecretword());
+            existingUser.setLocid(userDTO.getLocid());
+            existingUser.setCell(userDTO.getCell());
+            existingUser.setType(userDTO.getType());
+            existingUser.setStatus(userDTO.getStatus());
+            // createddate remains unchanged
+            
+            User updatedUser = userRepository.save(existingUser);
+            return convertToDTO(updatedUser);
+        }
+        return null;
+    }
+    
+    @Override
+    @Transactional
+    public void deleteUser(Integer id) {
+        userRepository.deleteById(id);
+    }
+    
+    @Override
+    public Optional<UserDTO> getUserById(Integer id) {
+        return userRepository.findById(id).map(this::convertToDTO);
+    }
+    
+    @Override
+    public List<UserDTO> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+    
+    @Override
+    public Optional<UserDTO> findByCode(String code) {
+        return userRepository.findByCode(code).map(this::convertToDTO);
+    }
+    
+    @Override
+    public Optional<UserDTO> findByCodeAndPassword(String code, String email) {
+        // Fix: Use email instead of password
+        return userRepository.findByCodeAndEmail(code, email).map(this::convertToDTO);
+    }
+}

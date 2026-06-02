@@ -33,12 +33,22 @@ public class ReportesController {
         return ResponseEntity.ok(ApiResponse.success("Estado de resultados generado exitosamente", resultados));
     }
 
-    @GetMapping("/libro-mayor")
-    public ResponseEntity<ApiResponse> getLibroMayor(
-            @RequestParam String cuentaCodigo,
-            @RequestParam LocalDate fechaInicio,
-            @RequestParam LocalDate fechaFin) {
-        List<Map<String, Object>> movimientos = reporteContableService.getLibroMayor(cuentaCodigo, fechaInicio, fechaFin);
-        return ResponseEntity.ok(ApiResponse.success("Libro mayor generado exitosamente", movimientos));
-    }
+@GetMapping("/libro-mayor")
+public ResponseEntity<ApiResponse> getLibroMayor(
+        @RequestParam(required = false, defaultValue = "all") String cuentaCodigo,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaInicio,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fechaFin) {
+    
+    System.out.println("📊 Llamada a libro-mayor");
+    System.out.println("   cuentaCodigo: " + cuentaCodigo);
+    System.out.println("   fechaInicio: " + fechaInicio);
+    System.out.println("   fechaFin: " + fechaFin);
+    
+    List<Map<String, Object>> movimientos = reporteContableService.getLibroMayor(cuentaCodigo, fechaInicio, fechaFin);
+    
+    System.out.println("   movimientos encontrados: " + movimientos.size());
+    
+    return ResponseEntity.ok(ApiResponse.success("Libro mayor generado exitosamente", movimientos));
+}
+
 }

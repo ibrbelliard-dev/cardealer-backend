@@ -40,3 +40,8 @@ target/classes/com/cardealer/iotproject/controller/AsientoContableController.cla
 target/classes/com/cardealer/iotproject/controller/DashboardController.class
 target/classes/com/cardealer/iotproject/controller/ParametroContableController.class
 target/classes/com/cardealer/iotproject/service/DashboardContableService.class
+target/classes/com/cardealer/iotproject/repository/VehicleImageRepository.class
+target/backend.jar
+target/backend.jar
+target/backend.jar
+target/cardealer-0.0.1-CARDEALER.jar

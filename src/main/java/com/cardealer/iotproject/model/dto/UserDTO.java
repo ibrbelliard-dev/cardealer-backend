@@ -1,6 +1,8 @@
 package com.cardealer.iotproject.model.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 
 public class UserDTO {
     private Long userId;
@@ -12,32 +14,36 @@ public class UserDTO {
     private String roleTitle;
     private Boolean isActive;
     private LocalDateTime lastLogin;
-    
-    // Getters and Setters
+    private Map<String, Object> role;  // Nueva propiedad para rol con permisos
+
+    // Getters y Setters
     public Long getUserId() { return userId; }
     public void setUserId(Long userId) { this.userId = userId; }
-    
+
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }
-    
+
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
-    
+
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
-    
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
-    
+
     public String getCellPhone() { return cellPhone; }
     public void setCellPhone(String cellPhone) { this.cellPhone = cellPhone; }
-    
+
     public String getRoleTitle() { return roleTitle; }
     public void setRoleTitle(String roleTitle) { this.roleTitle = roleTitle; }
-    
+
     public Boolean getIsActive() { return isActive; }
     public void setIsActive(Boolean isActive) { this.isActive = isActive; }
-    
+
     public LocalDateTime getLastLogin() { return lastLogin; }
     public void setLastLogin(LocalDateTime lastLogin) { this.lastLogin = lastLogin; }
+
+    public Map<String, Object> getRole() { return role; }
+    public void setRole(Map<String, Object> role) { this.role = role; }
 }

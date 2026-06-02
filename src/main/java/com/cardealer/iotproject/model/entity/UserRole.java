@@ -1,9 +1,12 @@
+// src/main/java/com/cardealer/iotproject/model/entity/UserRole.java
 package com.cardealer.iotproject.model.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_roles")
@@ -31,6 +34,15 @@ public class UserRole {
     
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<AppUser> users = new ArrayList<>();
+    
+    // Relación con permisos (solo una vez)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+        name = "user_role_permisos",
+        joinColumns = @JoinColumn(name = "role_id"),
+        inverseJoinColumns = @JoinColumn(name = "permiso_id")
+    )
+    private Set<Permiso> permisos = new HashSet<>();
     
     public UserRole() {}
     
@@ -67,4 +79,18 @@ public class UserRole {
     
     public List<AppUser> getUsers() { return users; }
     public void setUsers(List<AppUser> users) { this.users = users; }
+    
+    public Set<Permiso> getPermisos() { return permisos; }
+    public void setPermisos(Set<Permiso> permisos) { this.permisos = permisos; }
+    
+    // Métodos helper
+    public boolean hasPermission(String permisoNombre) {
+        if (permisos == null) return false;
+        return permisos.stream().anyMatch(p -> p.getNombre().equals(permisoNombre));
+    }
+    
+    public boolean hasModuleAccess(String modulo) {
+        if (permisos == null) return false;
+        return permisos.stream().anyMatch(p -> p.getModulo().equals(modulo));
+    }
 }

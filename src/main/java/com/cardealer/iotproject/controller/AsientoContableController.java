@@ -59,4 +59,18 @@ public class AsientoContableController {
         asientoService.delete(id);
         return ResponseEntity.ok(ApiResponse.success("Asiento eliminado exitosamente", null));
     }
+
+
+    // src/main/java/com/cardealer/iotproject/accounting/controller/AsientoContableController.java
+// Agrega este método
+
+@PutMapping("/{id}")
+public ResponseEntity<ApiResponse> update(@PathVariable Integer id, @RequestBody Map<String, Object> request) {
+    try {
+        AsientoContable asientoActualizado = asientoService.updateWithDetails(id, request);
+        return ResponseEntity.ok(ApiResponse.success("Asiento actualizado exitosamente", asientoActualizado));
+    } catch (RuntimeException e) {
+        return ResponseEntity.badRequest().body(ApiResponse.error(e.getMessage()));
+    }
+}
 }

@@ -1,3 +1,4 @@
+// src/main/java/com/cardealer/iotproject/service/ReporteContableService.java
 package com.cardealer.iotproject.service;
 
 import com.cardealer.iotproject.model.entity.*;
@@ -34,6 +35,12 @@ public class ReporteContableService {
     
     @Autowired
     private CommissionRepository commissionRepository;
+    
+    @Autowired
+    private AsientoContableRepository asientoContableRepository;
+    
+    @Autowired
+    private DetalleAsientoRepository detalleAsientoRepository;
 
     /**
      * BALANCE GENERAL - Estado de situación financiera a una fecha específica
@@ -193,8 +200,7 @@ public class ReporteContableService {
         BigDecimal totalIngresos = BigDecimal.ZERO;
         
         // 1.1 Ventas de Vehículos (facturas PAID/COMPLETED/CONFIRMED en el período)
-        List<Invoice> facturasPeriodo = invoiceRepository.findByStatusInAndInvoiceDateTimeBetween(
-            List.of("PAID", "COMPLETED", "CONFIRMED"), inicio, fin);
+        List<Invoice> facturasPeriodo = invoiceRepository.findPaidInvoicesBetween(inicio, fin);
         
         BigDecimal ventasVehiculos = facturasPeriodo.stream()
                 .map(Invoice::getTotal)
@@ -301,45 +307,62 @@ public class ReporteContableService {
         return resultados;
     }
 
-    // ReporteContableService.java - Método getLibroMayor corregido
-
-public List<Map<String, Object>> getLibroMayor(String cuentaCodigo, LocalDate fechaInicio, LocalDate fechaFin) {
-    List<Map<String, Object>> movimientos = new ArrayList<>();
-    
-    LocalDateTime inicio = fechaInicio.atStartOfDay();
-    LocalDateTime fin = fechaFin.atTime(LocalTime.MAX);
-    
-    BigDecimal saldoAcumulado = BigDecimal.ZERO;
-    
-    // Usar el método existente findPaidInvoicesBetween
-    List<Invoice> facturasPeriodo = invoiceRepository.findPaidInvoicesBetween(inicio, fin);
-    
-    // Si no existe, usar findByStatus y filtrar manualmente
-    // List<Invoice> facturasPeriodo = invoiceRepository.findByStatus("PAID");
-    
-    for (Invoice factura : facturasPeriodo) {
-        Map<String, Object> movimiento = new HashMap<>();
-        movimiento.put("fecha", factura.getInvoiceDateTime().toLocalDate().toString());
-        movimiento.put("numeroAsiento", "FACT-" + factura.getEnNcf());
-        movimiento.put("descripcion", "Venta - " + factura.getCustomerName());
-        movimiento.put("debe", factura.getTotal());
-        movimiento.put("haber", BigDecimal.ZERO);
-        saldoAcumulado = saldoAcumulado.add(factura.getTotal());
-        movimiento.put("saldo", saldoAcumulado);
+    /**
+     * LIBRO MAYOR - Movimientos detallados por cuenta
+     */
+    public List<Map<String, Object>> getLibroMayor(String cuentaCodigo, LocalDate fechaInicio, LocalDate fechaFin) {
+        List<Map<String, Object>> movimientos = new ArrayList<>();
         
-        // Si no hay filtro de cuenta, mostrar todos
-        if (cuentaCodigo == null || cuentaCodigo.isEmpty() || cuentaCodigo.equals("all")) {
-            movimientos.add(movimiento);
+        try {
+            // Obtener todos los asientos activos
+            List<AsientoContable> asientos = asientoContableRepository.findByActivoTrueOrderByFechaDesc();
+            
+            System.out.println("📊 Asientos encontrados: " + asientos.size());
+            
+            for (AsientoContable asiento : asientos) {
+                // Filtrar por fechas si se proporcionaron
+                if (fechaInicio != null && asiento.getFecha().isBefore(fechaInicio)) continue;
+                if (fechaFin != null && asiento.getFecha().isAfter(fechaFin)) continue;
+                
+                // Obtener detalles del asiento
+                List<DetalleAsiento> detalles = detalleAsientoRepository.findByAsiento_AsientoId(asiento.getAsientoId());
+                
+                for (DetalleAsiento detalle : detalles) {
+                    // Filtrar por cuenta si se especificó
+                    if (cuentaCodigo != null && !cuentaCodigo.equals("all") && !cuentaCodigo.equals("") &&
+                        detalle.getCuentaCodigo() != null && !detalle.getCuentaCodigo().equals(cuentaCodigo)) {
+                        continue;
+                    }
+                    
+                    Map<String, Object> movimiento = new HashMap<>();
+                    movimiento.put("fecha", asiento.getFecha().toString());
+                    movimiento.put("numeroAsiento", asiento.getNumeroAsiento());
+                    movimiento.put("descripcion", asiento.getDescripcion());
+                    movimiento.put("cuentaNombre", detalle.getCuentaNombre());
+                    movimiento.put("cuentaCodigo", detalle.getCuentaCodigo());
+                    movimiento.put("debe", detalle.getDebe());
+                    movimiento.put("haber", detalle.getHaber());
+                    movimiento.put("saldoAcumulado", 0.0);
+                    movimiento.put("saldoFinal", 0.0);
+                    
+                    movimientos.add(movimiento);
+                }
+            }
+            
+            System.out.println("📊 Movimientos generados: " + movimientos.size());
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error en getLibroMayor: " + e.getMessage());
+            e.printStackTrace();
         }
+        
+        // Ordenar por fecha
+        movimientos.sort(Comparator.comparing(m -> (String) m.get("fecha")));
+        
+        return movimientos;
     }
-    
-    // Ordenar por fecha
-    movimientos.sort(Comparator.comparing(m -> (String) m.get("fecha")));
-    
-    return movimientos;
-}
 
-    // ========== MÉTODOS AUXILIARES PARA CÁLCULOS REALES ==========
+    // ========== MÉTODOS AUXILIARES ==========
 
     private BigDecimal getCajaBancosHasta(LocalDateTime fechaCorte) {
         BigDecimal pagos = paymentRepository.getTotalPaymentsAmount();
@@ -376,7 +399,7 @@ public List<Map<String, Object>> getLibroMayor(String cuentaCodigo, LocalDate fe
     }
 
     private BigDecimal getTotalVentasHasta(LocalDateTime fechaCorte) {
-        List<Invoice> facturas = invoiceRepository.findByStatusIn(List.of("PAID", "COMPLETED", "CONFIRMED"));
+        List<Invoice> facturas = invoiceRepository.findByStatus("PAID");
         return facturas.stream()
                 .filter(f -> f.getInvoiceDateTime().isBefore(fechaCorte))
                 .map(Invoice::getTotal)
@@ -384,7 +407,6 @@ public List<Map<String, Object>> getLibroMayor(String cuentaCodigo, LocalDate fe
     }
 
     private BigDecimal getUtilidadAcumuladaHasta(LocalDateTime fechaCorte) {
-        // Utilidad = Ventas totales - Costo de vehículos vendidos - Comisiones pagadas
         BigDecimal ventas = getTotalVentasHasta(fechaCorte);
         
         List<Vehicle> vehiculosVendidos = vehicleRepository.findByStatus(VehicleStatus.SOLD);

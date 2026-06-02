@@ -1,8 +1,10 @@
+// src/main/java/com/cardealer/iotproject/repository/UserRoleRepository.java
 package com.cardealer.iotproject.repository;
 
 import com.cardealer.iotproject.model.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
 @Repository
